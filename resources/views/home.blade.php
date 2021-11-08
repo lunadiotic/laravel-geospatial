@@ -32,5 +32,30 @@
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     }).addTo(map);
+
+    $.get('/api/location', function(locations) {
+        L.geoJSON(locations,{
+            pointToLayer: function(geoJsonPoint,latlng) {
+                return L.marker(latlng);
+            }
+        })
+        .bindPopup(function(layer) {
+            return (`
+                <div class="my-2">
+                    <strong>Place Name</strong> :<br>${layer.feature.properties.name}
+                </div>
+                <div class="my-2">
+                    <strong>Description</strong>:<br>${layer.feature.properties.name}
+                </div>
+                <div class="my-2">
+                    <strong>Address</strong>:<br>${layer.feature.properties.address}
+                </div>
+            `);
+        }).addTo(map);
+        console.log(locations)
+    })
+    .fail(function() {
+        alert("error")
+    })
 </script>
 @endpush
